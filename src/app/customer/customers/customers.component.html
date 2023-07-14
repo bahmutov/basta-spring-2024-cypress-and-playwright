@@ -1,6 +1,10 @@
 <h2 class="my-2">Customers</h2>
 <p>
-  <a [routerLink]="['.', 'new']" color="primary" data-testid="btn-customers-add" mat-raised-button
+  <a
+    [routerLink]="['.', 'new']"
+    color="primary"
+    data-testid="btn-customers-add"
+    mat-raised-button
     >Add Customer</a
   >
 </p>
@@ -19,7 +23,8 @@
       [attr.aria-labelledby]="'customer-' + customer.id"
     >
       <p class="edit" data-testid="btn-edit">
-        <a [routerLink]="['.', customer.id]" aria-label="Edit Customer">
+        <a [routerLink]="['.', customer.id]">
+          Edit
           <mat-icon>edit</mat-icon>
         </a>
       </p>
@@ -30,7 +35,11 @@
       <p class="birthdate">{{ customer.birthdate | date }}</p>
     </div>
     <div class="paginator">
-      <button [disabled]="data.currentPage === 0" mat-raised-button (click)="previousPage()">
+      <button
+        [disabled]="data.currentPage === 0"
+        mat-raised-button
+        (click)="previousPage()"
+      >
         <mat-icon data-testid="btn-customers-back"> arrow_back </mat-icon>
       </button>
       {{ data.currentPage + 1 }}
