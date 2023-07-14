@@ -18,9 +18,18 @@ describe('misc', () => {
 
   it('should request brochure for Firenze', () => {
     cy.get('[data-testid=btn-holidays]').click();
-    cy.contains('[data-testid=holiday-card]', 'Firenze').find('[data-testid=btn-brochure]').click();
+    cy.contains('[data-testid=holiday-card]', 'Firenze')
+      .find('[data-testid=btn-brochure]')
+      .click();
     cy.get('[data-testid=ri-address]').type('Domgasse 5');
     cy.get('[data-testid=ri-search]').click();
     cy.get('[data-testid=ri-message]').should('contain.text', 'Brochure sent');
+  });
+
+  it('should mock the holidays', () => {
+    cy.intercept('GET', '**/holiday', { fixture: 'holidays.json' });
+    cy.visit('');
+    cy.testid('btn-holidays').click();
+    cy.get('app-holiday-card').should('contain.text', 'Unicorn');
   });
 });
