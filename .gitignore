@@ -40,3 +40,6 @@ Thumbs.db
 
 .angular
 /e2e/customers.txt
+/test-results/
+/playwright-report/
+/playwright/.cache/
