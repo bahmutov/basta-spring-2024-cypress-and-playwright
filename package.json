@@ -8,8 +8,8 @@
     "test": "nx test",
     "component-test": "nx component-test eternal",
     "component-test:watch": "nx component-test eternal --watch",
-    "e2e": "nx e2e e2e",
-    "e2e:watch": "nx e2e e2e --watch",
+    "e2e": "nx e2e e2e --skip-serve",
+    "e2e:watch": "nx e2e e2e --watch --skip-serve",
     "storybook": "nx storybook eternal",
     "storybook:build": "nx run eternal:build-storybook",
     "storybook:build:run": "npx serve dist/storybook/eternal"

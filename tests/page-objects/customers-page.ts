@@ -4,7 +4,7 @@ export class CustomersPage {
   constructor(private page: Page) {}
 
   async add(): Promise<void> {
-    await this.page.getByTestId('btn-add-customer').click();
+    await this.page.getByTestId('btn-customers-add').click();
   }
 
   async edit(name: string): Promise<void> {
@@ -18,5 +18,13 @@ export class CustomersPage {
 
   async assertRowCount(count: number) {
     await expect(this.page.getByTestId('row-customer')).toHaveCount(count);
+  }
+
+  async nextPage() {
+    await this.page.getByTestId('btn-customers-next').click();
+  }
+
+  async prevPage() {
+    await this.page.getByTestId('btn-customers-previous').click();
   }
 }

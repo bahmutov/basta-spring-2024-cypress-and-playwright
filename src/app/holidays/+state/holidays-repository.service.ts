@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { fromHolidays } from './holidays.selectors';
 import { holidaysActions } from './holidays.actions';
 import { Holiday } from '../model';
-import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class HolidaysRepository {
@@ -13,8 +12,8 @@ export class HolidaysRepository {
     return this.#store.selectSignal(fromHolidays.holidays);
   }
 
-  get holidays$(): Observable<Holiday[]> {
-    return this.#store.select(fromHolidays.holidays);
+  get holidays$(): Signal<Holiday[]> {
+    return this.#store.selectSignal(fromHolidays.holidays);
   }
 
   get selected(): Signal<Holiday | undefined> {

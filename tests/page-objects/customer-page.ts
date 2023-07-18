@@ -31,7 +31,7 @@ export class CustomerPage {
     if (customerData.country !== undefined) {
       await this.page.getByTestId('sel-country').click();
       await this.page
-        .locator('[data-testid=opt-country] >> text=Greece')
+        .locator('[data-testid=opt-country] >> text=Austria')
         .click();
     }
   }

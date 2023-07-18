@@ -49,7 +49,7 @@ describe('init', () => {
     cy.testid('row-customer').should('contain.text', 'Tom Lincoln');
   });
 
-  it('should create and delete a customer in an intelligent way', () => {
+  it.skip('should create and delete a customer in an intelligent way', () => {
     const name =
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15);

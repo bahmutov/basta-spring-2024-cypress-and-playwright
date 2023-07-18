@@ -2,7 +2,7 @@ import { CustomerPage } from '../page-objects/customer-page';
 import { CustomersPage } from '../page-objects/customers-page';
 
 export interface CustomersFixtures {
-  customersPage: CustomerPage;
+  customersPage: CustomersPage;
   customerPage: CustomerPage;
 }
 

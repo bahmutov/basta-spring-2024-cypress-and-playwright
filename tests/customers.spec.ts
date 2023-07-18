@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { expect, test as base } from '@playwright/test';
 import {
   CustomersFixtures,
   customersFixtures,
@@ -15,7 +15,7 @@ const test = base.extend<CustomersFixtures & SidemenuFixtures>({
 
 test.describe('customers', () => {
   test.beforeEach(async ({ page }) => {
-    page.goto('');
+    await page.goto('');
   });
 
   test.describe('Viewports', () => {
@@ -36,7 +36,6 @@ test.describe('customers', () => {
   });
 
   test('rename Latitia to Laetitia', async ({ page }) => {
-    await page.goto('');
     await page.getByTestId('btn-customers').click();
     await page
       .locator('data-testid=row-customer', { hasText: 'Latitia' })
@@ -66,6 +65,7 @@ test.describe('customers', () => {
       birthday: new Date(1995, 9, 12),
     });
     await customerPage.submit();
+    await customersPage.nextPage();
 
     await expect(
       page.locator('data-testid=row-customer', {

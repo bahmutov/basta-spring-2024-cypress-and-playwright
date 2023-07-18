@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('rename Latitia to Laetitia', async ({ page }) => {
   await page.goto('');
@@ -9,6 +9,7 @@ test('rename Latitia to Laetitia', async ({ page }) => {
     .click();
 
   await page.getByTestId('inp-firstname').fill('Laetitia');
+  await page.getByTestId('inp-name').click();
   await page.getByTestId('btn-submit').click();
 
   await expect(

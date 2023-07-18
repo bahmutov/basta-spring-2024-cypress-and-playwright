@@ -36,6 +36,7 @@
     <div class="paginator">
       <button
         [disabled]="data.currentPage === 0"
+        data-testid="btn-customers-previous"
         mat-raised-button
         (click)="previousPage()"
       >
