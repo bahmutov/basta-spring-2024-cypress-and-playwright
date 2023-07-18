@@ -1,4 +1,17 @@
-import { test, expect } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
+import {
+  CustomersFixtures,
+  customersFixtures,
+} from './fixtures/customer.fixtures';
+import {
+  SidemenuFixtures,
+  sidemenuFixtures,
+} from './fixtures/sidemenu.fixtures';
+
+const test = base.extend<CustomersFixtures & SidemenuFixtures>({
+  ...customersFixtures,
+  ...sidemenuFixtures,
+});
 
 test.describe('customers', () => {
   test.beforeEach(async ({ page }) => {
@@ -38,16 +51,26 @@ test.describe('customers', () => {
     ).toBeVisible();
   });
 
-  it('should add a new customer', () => {
-    sidemenu.open('Customers');
-    cy.testid('btn-customers-add').click();
-    customer.setFirstname('Tom');
-    customer.setName('Lincoln');
-    customer.setCountry('USA');
-    customer.setBirthday(new Date(1995, 9, 12));
-    customer.submit();
-    cy.testid('btn-customers-next').click();
+  test('add Tom Lincoln as new customer', async ({
+    page,
+    sidemenuPage,
+    customersPage,
+    customerPage,
+  }) => {
+    await sidemenuPage.select('customers');
+    await customersPage.add();
+    await customerPage.fillIn({
+      firstname: 'Tom',
+      lastname: 'Lincoln',
+      country: 'USA',
+      birthday: new Date(1995, 9, 12),
+    });
+    await customerPage.submit();
 
-    cy.testid('row-customer').should('contain.text', 'Tom Lincoln');
+    await expect(
+      page.locator('data-testid=row-customer', {
+        hasText: 'Tom Lincoln',
+      })
+    ).toBeVisible();
   });
 });
