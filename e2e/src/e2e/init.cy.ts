@@ -10,9 +10,6 @@ describe('init', () => {
     cy.get('[data-testid=inp-firstname]').type('Laetitia');
     cy.get('[data-testid=btn-submit]').click();
 
-    cy.get('[data-testid=row-customer]').should(($rows) => {
-      console.log($rows);
-      expect($rows).to.have.length(10);
-    });
+    cy.get('[data-testid=row-customer]').should('contain.text', 'Laetitia');
   });
 });

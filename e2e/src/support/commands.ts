@@ -14,7 +14,7 @@ Cypress.Commands.addQuery('testid', (selector: string) => {
     Chainable<JQuery>
   >;
 
-  return (subject) => getFn();
+  return () => getFn();
 });
 
 Cypress.Commands.add('openMenu', (item: 'Customers' | 'Holidays') => {
