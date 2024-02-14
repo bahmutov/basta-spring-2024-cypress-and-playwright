@@ -58,7 +58,7 @@
     "@nx/storybook": "^16.3.2",
     "@nx/web": "16.2.2",
     "@nx/workspace": "16.2.2",
-    "@playwright/test": "^1.36.1",
+    "@playwright/test": "^1.41.2",
     "@schematics/angular": "~16.0.0",
     "@softarc/eslint-plugin-sheriff": "^0.10.0",
     "@softarc/sheriff-core": "^0.10.0",
