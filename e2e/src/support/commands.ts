@@ -9,12 +9,8 @@ declare namespace Cypress {
   }
 }
 
-Cypress.Commands.addQuery('testid', (selector: string) => {
-  const getFn = cy.now('get', `[data-testid=${selector}]`) as () => Promise<
-    Chainable<JQuery>
-  >;
-
-  return () => getFn();
+Cypress.Commands.add('testid', (selector: string) => {
+  return cy.get(`[data-testid=${selector}]`);
 });
 
 Cypress.Commands.add('openMenu', (item: 'Customers' | 'Holidays') => {

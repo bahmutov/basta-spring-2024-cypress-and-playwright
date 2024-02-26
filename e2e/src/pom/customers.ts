@@ -20,6 +20,7 @@ export class Customers {
 
   delete() {
     cy.get('button').contains('Delete').click();
+    cy.location('pathname').should('eq', '/customer');
   }
 
   submitForm(
@@ -49,47 +50,51 @@ export class Customers {
   }
 
   verifyCustomerDoesNotExist(customer: string) {
-    const checkOnPage = (hasNextPage: boolean) => {
-      return cy.get('[data-testid=row-customer] p.name').then(($names) => {
-        const exists = Cypress._.some(
-          $names.toArray(),
-          ($name) => $name.textContent === customer
-        );
-
-        if (exists) {
-          throw new Error(`Customer ${customer} does exist`);
-        }
-
-        if (hasNextPage) {
-          this.nextPage().then(checkOnPage);
-        }
-      });
-    };
-
-    this.nextPage().then(checkOnPage);
+    function checkPage(): void {
+      cy.contains('[data-testid=row-customer] p.name', customer).should(
+        'not.exist'
+      );
+      cy.testid('btn-customers-next')
+        .should(Cypress._.noop)
+        .then(($next) => {
+          const isDisabled = $next.prop('disabled');
+          if (isDisabled) {
+            cy.log('All pages checked');
+          } else {
+            // confirm the page _loads_ new data
+            // to make sure the click has finished
+            cy.testid('row-customer')
+              .first()
+              .find('p.name')
+              .invoke('text')
+              .invoke('trim')
+              .then((firstName) => {
+                cy.wrap($next).click();
+                cy.testid('row-customer')
+                  .first()
+                  .should('not.include.text', firstName);
+              });
+            checkPage();
+          }
+        });
+    }
+    return checkPage();
   }
 
   verifyCustomer(customer: string) {
-    const checkOnPage = (hasNextPage: boolean) =>
-      cy.get('[data-testid=row-customer] p.name').then(($names) => {
-        const exists = Cypress._.some(
-          $names.toArray(),
-          ($name) => ($name.textContent || '').trim() === customer
-        );
-        cy.log(String(exists));
-        if (!exists) {
-          if (hasNextPage) {
-            this.nextPage().then(checkOnPage);
+    function findMaybe(): void {
+      cy.contains('[data-testid=row-customer] p.name', customer)
+        .should(Cypress._.noop)
+        .then(($el) => {
+          if ($el.length) {
+            cy.wrap($el);
           } else {
-            throw new Error(`Customer ${customer} does not exist`);
+            cy.log('**going to the next page**');
+            cy.testid('btn-customers-next').click().then(findMaybe);
           }
-        }
-      });
-
-    cy.testid('btn-customers-next').then(($button) => {
-      const isDisabled = $button.prop('disabled');
-      checkOnPage(!isDisabled);
-    });
+        });
+    }
+    findMaybe();
   }
 
   private nextPage(): Chainable<boolean> {
