@@ -1,6 +1,6 @@
 describe('init', () => {
   it('should rename Latitia to Laetita', () => {
-    cy.visit('');
+    cy.visit('/');
     cy.get('[data-testid=btn-customers]').click();
     cy.contains('[data-testid=row-customer]', 'Latitia')
       .find('[data-testid=btn-edit]')

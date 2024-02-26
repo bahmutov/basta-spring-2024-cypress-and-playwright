@@ -1,16 +1,16 @@
 describe('misc', () => {
   beforeEach(() => {
-    cy.visit('');
+    cy.visit('/');
   });
 
   it('should count the holidays according to the API', () => {
-    let holidaysCount = 0;
-    cy.request('https://api.eternal-holidays.net/holiday').then(
-      (res) => (holidaysCount = res.body.length)
-    );
-    cy.openMenu('Holidays');
-    cy.get('app-holiday-card').should(($cards) =>
-      expect($cards).to.have.lengthOf(holidaysCount)
-    );
+    cy.request('https://api.eternal-holidays.net/holiday')
+      .its('body.length')
+      .should('be.greaterThan', 0)
+      .then((holidaysCount) => {
+        cy.openMenu('Holidays');
+        cy.location('pathname').should('eq', '/holidays');
+        cy.get('app-holiday-card').should('have.length', holidaysCount);
+      });
   });
 });
