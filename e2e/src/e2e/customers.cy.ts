@@ -49,11 +49,11 @@ describe('customers', () => {
 
       customers.open();
       cy.testid('row-customer');
-      // customers.add();
-      // customers.submitForm('Max', name, 'Austria', new Date(1985, 11, 12));
-      // cy.testid('row-customer');
-      // customers.clickCustomer(fullName);
-      // customers.delete();
+      customers.add();
+      customers.submitForm('Max', name, 'Austria', new Date(1985, 11, 12));
+      cy.testid('row-customer');
+      customers.clickCustomer(fullName);
+      customers.delete();
 
       cy.log('**confirm customer does not exist**');
       recurse(
@@ -64,13 +64,21 @@ describe('customers', () => {
           );
           return cy.testid('btn-customers-next').invoke('prop', 'disabled');
         },
-        (disabled) => disabled === true,
+        Cypress._.identity,
         {
           timeout: 10_000,
           limit: 10,
           log: 'checked all pages',
           post() {
-            cy.testid('btn-customers-next').click().wait(1000);
+            // make sure the new rows are there
+            cy.get('[data-testid=row-customer]')
+              .first()
+              .then(($first) => {
+                cy.testid('btn-customers-next').click();
+                cy.wrap(null).should(() => {
+                  expect($first[0]).to.satisfy(Cypress.dom.isDetached);
+                });
+              });
           },
         }
       );
