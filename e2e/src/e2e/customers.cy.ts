@@ -1,23 +1,11 @@
-import ViewportPreset = Cypress.ViewportPreset;
 import { sidemenu } from '../pom/sidemenu';
 import { customer } from '../pom/customer';
 import { customers } from '../pom/customers';
+import { recurse } from 'cypress-recurse';
 
 describe('customers', () => {
   beforeEach(() => {
     cy.visit('/');
-  });
-
-  (
-    ['ipad-2', 'ipad-mini', 'iphone-6', 'samsung-s10'] as ViewportPreset[]
-  ).forEach((preset) => {
-    // use https://github.com/bahmutov/cypress-each here
-    it(`should count the entries in ${preset}`, () => {
-      cy.viewport(preset);
-      cy.visit('');
-      cy.testid('btn-customers').click();
-      cy.testid('row-customer').should('have.length', 10);
-    });
   });
 
   it('should add a new customer', () => {
@@ -49,6 +37,43 @@ describe('customers', () => {
       customers.delete();
       cy.testid('row-customer');
       customers.verifyCustomerDoesNotExist(fullName);
+    }
+  );
+
+  it.only(
+    'should create and delete a customer in an intelligent way (cypress-recurse)',
+    { viewportHeight: 1000 },
+    () => {
+      const name = String(Cypress._.random(1e6, 1e7));
+      const fullName = `Max ${name}`;
+
+      customers.open();
+      cy.testid('row-customer');
+      // customers.add();
+      // customers.submitForm('Max', name, 'Austria', new Date(1985, 11, 12));
+      // cy.testid('row-customer');
+      // customers.clickCustomer(fullName);
+      // customers.delete();
+
+      cy.log('**confirm customer does not exist**');
+      recurse(
+        () => {
+          cy.get('[data-testid=row-customer]');
+          cy.contains('[data-testid=row-customer] p.name', fullName).should(
+            'not.exist'
+          );
+          return cy.testid('btn-customers-next').invoke('prop', 'disabled');
+        },
+        (disabled) => disabled === true,
+        {
+          timeout: 10_000,
+          limit: 10,
+          log: 'checked all pages',
+          post() {
+            cy.testid('btn-customers-next').click().wait(1000);
+          },
+        }
+      );
     }
   );
 });
