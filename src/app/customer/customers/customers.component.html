@@ -8,7 +8,11 @@
     >Add Customer</a
   >
 </p>
-<div *ngIf="data$ | async as data" class="customers">
+<div
+  *ngIf="data$ | async as data"
+  class="customers"
+  [attr.data-page]="data.currentPage"
+>
   <div class="row header">
     <p class="edit">&nbsp;</p>
     <p class="name">Name</p>
@@ -20,6 +24,7 @@
       *ngFor="let customer of data.customers"
       class="row"
       data-testid="row-customer"
+      [attr.data-page]="data.currentPage"
       [attr.aria-labelledby]="'customer-' + customer.id"
     >
       <p class="edit" data-testid="btn-edit">

@@ -2,6 +2,7 @@ import { sidemenu } from '../pom/sidemenu';
 import { customer } from '../pom/customer';
 import { customers } from '../pom/customers';
 import { recurse } from 'cypress-recurse';
+import 'cypress-map';
 
 describe('customers', () => {
   beforeEach(() => {
@@ -70,15 +71,9 @@ describe('customers', () => {
           limit: 10,
           log: 'checked all pages',
           post() {
-            // make sure the new rows are there
-            cy.get('[data-testid=row-customer]')
-              .first()
-              .then(($first) => {
-                cy.testid('btn-customers-next').click();
-                cy.wrap(null).should(() => {
-                  expect($first[0]).to.satisfy(Cypress.dom.isDetached);
-                });
-              });
+            cy.get('[data-testid=row-customer]').first().asEnv('firstRow');
+            cy.testid('btn-customers-next').click();
+            cy.detaches('@firstRow');
           },
         }
       );
