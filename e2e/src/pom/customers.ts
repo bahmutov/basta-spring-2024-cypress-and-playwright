@@ -51,10 +51,9 @@ export class Customers {
   verifyCustomerDoesNotExist(customer: string) {
     const checkOnPage = (hasNextPage: boolean) => {
       return cy.get('[data-testid=row-customer] p.name').then(($names) => {
-        const exists = Cypress._.some(
-          $names.toArray(),
-          ($name) => $name.textContent === customer
-        );
+        const exists = Cypress._.some($names.toArray(), ($name) => {
+          return $name.textContent.includes(customer);
+        });
 
         if (exists) {
           throw new Error(`Customer ${customer} does exist`);

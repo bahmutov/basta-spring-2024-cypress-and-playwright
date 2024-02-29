@@ -3,7 +3,7 @@ import Chainable = Cypress.Chainable;
 
 declare namespace Cypress {
   interface Chainable<Subject> {
-    testid(selector: string): Chainable<JQuery<HTMLElement>>;
+    testid(selector: string, text?: string): Chainable<JQuery<HTMLElement>>;
     openMenu(item: 'Customers' | 'Holidays'): void;
     findByRole(role: string, textMatch: string | RegExp): Chainable<JQuery>;
   }
