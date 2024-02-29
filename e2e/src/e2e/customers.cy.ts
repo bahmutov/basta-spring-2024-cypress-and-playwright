@@ -73,7 +73,7 @@ describe('init', () => {
           cy.testid('row-customer', fullName).should('not.exist');
           return cy.testid('btn-customers-next').invoke('prop', 'disabled');
         },
-        (disabled) => disabled,
+        Cypress._.identity,
         {
           log: 'Finished checking the pages',
           timeout: 10_000,
