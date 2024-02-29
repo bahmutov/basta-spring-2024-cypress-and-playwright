@@ -49,20 +49,16 @@ describe('customers', () => {
       const fullName = `Max ${name}`;
 
       customers.open();
-      cy.testid('row-customer');
       customers.add();
       customers.submitForm('Max', name, 'Austria', new Date(1985, 11, 12));
-      cy.testid('row-customer');
       customers.clickCustomer(fullName);
       customers.delete();
 
       cy.log('**confirm customer does not exist**');
       recurse(
         () => {
-          cy.get('[data-testid=row-customer]');
-          cy.contains('[data-testid=row-customer] p.name', fullName).should(
-            'not.exist'
-          );
+          cy.testid('row-customer');
+          cy.testid('row-customer', fullName).should('not.exist');
           return cy.testid('btn-customers-next').invoke('prop', 'disabled');
         },
         Cypress._.identity,
@@ -71,7 +67,7 @@ describe('customers', () => {
           limit: 10,
           log: 'checked all pages',
           post() {
-            cy.get('[data-testid=row-customer]').first().asEnv('firstRow');
+            cy.testid('row-customer').first().asEnv('firstRow');
             cy.testid('btn-customers-next').click();
             cy.detaches('@firstRow');
           },

@@ -83,6 +83,7 @@ export class Customers {
 
   verifyCustomer(customer: string) {
     function findMaybe(): void {
+      cy.testid('row-customer');
       cy.contains('[data-testid=row-customer] p.name', customer)
         .should(Cypress._.noop)
         .then(($el) => {
