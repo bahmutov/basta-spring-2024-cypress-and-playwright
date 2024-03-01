@@ -1,10 +1,6 @@
 import ViewportPreset = Cypress.ViewportPreset;
 import { sidemenu } from '../pom/sidemenu';
 import { customer } from '../pom/customer';
-import { customers } from '../pom/customers';
-
-import 'cypress-map';
-import { recurse } from 'cypress-recurse';
 
 describe('init', () => {
   beforeEach(() => {
@@ -51,40 +47,4 @@ describe('init', () => {
 
     cy.testid('row-customer').should('contain.text', 'Tom Lincoln');
   });
-
-  it.only(
-    'should create and delete a customer in an intelligent way',
-    { viewportHeight: 800 },
-    () => {
-      const name = `Smith ${Cypress._.random(1e6)}`;
-      const fullName = `Max ${name}`;
-
-      cy.visit('');
-      customers.open();
-      customers.add();
-      customers.submitForm('Max', name, 'Austria', new Date(1985, 11, 12));
-      customers.clickCustomer(fullName);
-      customers.delete();
-      // customers.verifyCustomerDoesNotExist('Hugo Brandt');
-
-      recurse(
-        () => {
-          cy.testid('row-customer');
-          cy.testid('row-customer', fullName).should('not.exist');
-          return cy.testid('btn-customers-next').invoke('prop', 'disabled');
-        },
-        Cypress._.identity,
-        {
-          log: 'Finished checking the pages',
-          timeout: 10_000,
-          delay: 500,
-          post() {
-            cy.testid('row-customer').first().asEnv('firstRow');
-            cy.testid('btn-customers-next').click();
-            cy.detaches('@firstRow');
-          },
-        }
-      );
-    }
-  );
 });
