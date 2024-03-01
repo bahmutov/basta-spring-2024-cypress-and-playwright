@@ -12,13 +12,26 @@ import { fromCustomer } from '../+state/customer.selectors';
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, RouterLink, AsyncPipe, DatePipe, NgIf, NgForOf]
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    RouterLink,
+    AsyncPipe,
+    DatePipe,
+    NgIf,
+    NgForOf,
+  ],
 })
 export class CustomersComponent implements OnInit {
   #store = inject(Store);
   data$ = this.#store.select(fromCustomer.selectCustomersAndPage);
 
   ngOnInit() {
+    // @ts-expect-error
+    if (window.Cypress) {
+      // @ts-expect-error
+      window.store = this.#store;
+    }
     this.#store.dispatch(customerActions.load());
   }
 

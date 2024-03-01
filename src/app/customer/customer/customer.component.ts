@@ -51,12 +51,6 @@ export class CustomerComponent implements OnInit {
   #route = inject(ActivatedRoute);
 
   ngOnInit() {
-    // @ts-expect-error
-    if (window.Cypress) {
-      // @ts-expect-error
-      window.store = this.#store;
-    }
-
     this.#store.dispatch(customerActions.load());
     if (this.#route.snapshot.data['mode'] === 'edit') {
       this.#store
