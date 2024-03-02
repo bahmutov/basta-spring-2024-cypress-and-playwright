@@ -70,7 +70,9 @@ export class CustomerComponent implements OnInit {
       if (customer.id > 0) {
         this.#store.dispatch(customerActions.update({ customer }));
       } else {
-        this.#store.dispatch(customerActions.add({ customer }));
+        const action = customerActions.add({ customer });
+        console.log('added customer', action);
+        this.#store.dispatch(action);
       }
     }
   }

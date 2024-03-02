@@ -4,6 +4,11 @@ import 'cypress-map';
 import { recurse } from 'cypress-recurse';
 
 export class Customers {
+  visit() {
+    cy.visit('/customer');
+    cy.testid('row-customer');
+  }
+
   clickCustomer(customer: string) {
     this.goTo(customer);
 
