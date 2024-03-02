@@ -21,7 +21,7 @@ export class Customers {
   }
 
   delete() {
-    cy.log('**deleting**');
+    cy.log('**deleting the customer**');
     cy.on(
       'window:confirm',
       cy
@@ -30,7 +30,7 @@ export class Customers {
         // @ts-expect-error
         .as('confirm')
     );
-    cy.get('button').contains('Delete').click();
+    cy.contains('button', 'Delete').click();
     cy.get('@confirm').should('have.been.calledOnceWith', 'Really delete?');
     cy.location('pathname').should('eq', '/customer');
   }
