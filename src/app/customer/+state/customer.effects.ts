@@ -22,7 +22,10 @@ export class CustomerEffects {
   add$ = createEffect(() =>
     this.#actions$.pipe(
       ofType(customerActions.add),
-      concatMap(({ customer }) => this.#http.post<Customer>(this.url, customer)),
+      tap(({ customer }) => console.log('add', customer)),
+      concatMap(({ customer }) =>
+        this.#http.post<Customer>(this.url, customer)
+      ),
       map((customer) => customerActions.added({ customer })),
       tap(() => this.#router.navigateByUrl('/customer'))
     )
@@ -50,15 +53,19 @@ export class CustomerEffects {
     observable: Observable<T>
   ): Observable<{ customers: Customer[]; pageCount: number }> =>
     observable.pipe(
-      concatLatestFrom(() => this.#store.select(fromCustomer.selectCurrentPage)),
+      concatLatestFrom(() =>
+        this.#store.select(fromCustomer.selectCurrentPage)
+      ),
       switchMap(([, page]) =>
         this.#http.get<{ content: Customer[]; total: number }>(this.url, {
-          params: new HttpParams().append('page', '' + page).append('pageSize', this.pageSize)
+          params: new HttpParams()
+            .append('page', '' + page)
+            .append('pageSize', this.pageSize),
         })
       ),
       map(({ content, total }) => ({
         customers: content,
-        pageCount: Math.floor(total / this.pageSize)
+        pageCount: Math.floor(total / this.pageSize),
       })),
       tap(console.log)
     );
@@ -82,11 +89,12 @@ export class CustomerEffects {
   load$ = createEffect(() =>
     this.#actions$.pipe(
       ofType(customerActions.load),
+      // tap(() => console.log('load', customerActions.load)),
       this.#fetchCustomers,
       map(({ customers, pageCount }) =>
         customerActions.loaded({
           customers,
-          pageCount
+          pageCount,
         })
       )
     )

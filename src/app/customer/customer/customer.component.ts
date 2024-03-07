@@ -51,7 +51,6 @@ export class CustomerComponent implements OnInit {
   #route = inject(ActivatedRoute);
 
   ngOnInit() {
-    this.#store.dispatch(customerActions.load());
     if (this.#route.snapshot.data['mode'] === 'edit') {
       this.#store
         .select(

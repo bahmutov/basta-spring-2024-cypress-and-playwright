@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HeaderComponent } from './core/header/header.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidemenuComponent } from './core/sidemenu/sidemenu.component';
 import { RouterOutlet } from '@angular/router';
 import { LoaderComponent } from './core/loader/loader.component';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,17 @@ import { LoaderComponent } from './core/loader/loader.component';
     SidemenuComponent,
     MatToolbarModule,
     MatSidenavModule,
-    RouterOutlet
-  ]
+    RouterOutlet,
+  ],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor(private ngZone: NgZone) {}
+
+  ngOnInit() {
+    // @ts-expect-error
+    if (window.Cypress) {
+      // @ts-expect-error
+      window.ngZone = this.ngZone;
+    }
+  }
+}

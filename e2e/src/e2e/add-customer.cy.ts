@@ -6,21 +6,32 @@ describe('Customers', { viewportHeight: 800 }, () => {
   });
 
   it.only('adds a customer via UI', () => {
+    const firstname = 'Test';
     const name = `Smith ${Cypress._.random(1e6)}`;
-    const fullName = `Max ${name}`;
+    const fullName = `${firstname} ${name}`;
 
     customers.visit();
     const addCustomer = {
       customer: {
         id: 0,
-        firstname: 'Max',
-        name: 'Smith 999999',
+        firstname,
+        name,
         country: 'AT',
         birthdate: '1985-12-12T05:00:00.000Z',
       },
       type: '[Customer] add',
     };
-    cy.window().its('store').invoke('dispatch', addCustomer);
-    cy.reload();
+    cy.window().then((win) => {
+      // @ts-expect-error
+      win.ngZone.run(() => {
+        // @ts-expect-error
+        win.store.dispatch(addCustomer);
+        // @ts-expect-error
+        win.store.dispatch({ type: '[Customer] load' });
+      });
+    });
+
+    customers.clickCustomer(fullName);
+    cy.location('pathname').should('match', /\/customer\/\d+$/);
   });
 });

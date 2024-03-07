@@ -32,7 +32,10 @@ export class CustomersComponent implements OnInit {
       // @ts-expect-error
       window.store = this.#store;
     }
-    this.#store.dispatch(customerActions.load());
+
+    const loadAction = customerActions.load();
+    console.log({ loadAction });
+    this.#store.dispatch(loadAction);
   }
 
   previousPage() {
