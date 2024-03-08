@@ -19,6 +19,14 @@ describe('Customers', { viewportHeight: 800 }, () => {
     customers.goTo('Tom Lincoln').invoke('css', 'border', '2px solid red');
   });
 
+  it('adds a customer via UI (2nd version)', () => {
+    sidemenu.open('Customers');
+    cy.testid('btn-customers-add').click();
+    customers.submitForm('Tom', 'Lincoln', 'USA', new Date(1995, 9, 12));
+
+    customers.goTo('Tom Lincoln').invoke('css', 'border', '2px solid red');
+  });
+
   it('adds a customer via app action', () => {
     const firstname = 'Tom';
     const name = 'Lincoln';
