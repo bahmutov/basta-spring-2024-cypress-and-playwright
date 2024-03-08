@@ -25,9 +25,7 @@ export class AppComponent implements OnInit {
   constructor(private ngZone: NgZone) {}
 
   ngOnInit() {
-    // @ts-expect-error
     if (window.Cypress) {
-      // @ts-expect-error
       window.ngZone = this.ngZone;
     }
   }

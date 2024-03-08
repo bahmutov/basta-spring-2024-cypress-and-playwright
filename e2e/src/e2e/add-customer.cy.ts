@@ -1,15 +1,6 @@
 import { sidemenu } from '../pom/sidemenu';
 import { customer } from '../pom/customer';
 import { customers } from '../pom/customers';
-import type { NgZone } from '@angular/core';
-import type { Store } from '@ngrx/store';
-
-declare global {
-  interface Window {
-    ngZone?: NgZone;
-    store?: Store<any>;
-  }
-}
 
 describe('Customers', { viewportHeight: 800 }, () => {
   beforeEach(() => {
@@ -75,6 +66,7 @@ describe('Customers', { viewportHeight: 800 }, () => {
     cy.window().then((win) => {
       win.ngZone!.run(() => {
         win.store!.dispatch(addCustomer);
+        // @ts-expect-error
         win.store!.dispatch(customerActions.load());
       });
     });

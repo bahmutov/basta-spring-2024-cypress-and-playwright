@@ -27,9 +27,7 @@ export class CustomersComponent implements OnInit {
   data$ = this.#store.select(fromCustomer.selectCustomersAndPage);
 
   ngOnInit() {
-    // @ts-expect-error
     if (window.Cypress) {
-      // @ts-expect-error
       window.store = this.#store;
     }
 
