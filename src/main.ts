@@ -58,10 +58,4 @@ bootstrapApplication(AppComponent, {
     },
     provideAnimations(),
   ],
-}).then((appRef) => {
-  // @ts-expect-error
-  if (window.Cypress) {
-    // @ts-expect-error
-    window.ngApp = appRef;
-  }
 });

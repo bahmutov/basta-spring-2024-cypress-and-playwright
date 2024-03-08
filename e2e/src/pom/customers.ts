@@ -54,7 +54,7 @@ export class Customers {
   }
 
   goTo(customer: string) {
-    this.verifyCustomer(customer);
+    return this.verifyCustomer(customer);
   }
 
   goToEnd() {
