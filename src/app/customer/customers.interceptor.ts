@@ -5,7 +5,7 @@ import {
   HttpInterceptor,
   HttpParams,
   HttpRequest,
-  HttpResponse
+  HttpResponse,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
@@ -21,7 +21,10 @@ export class CustomersInterceptor implements HttpInterceptor {
 
   #configuration = inject(Configuration);
 
-  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(
+    req: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
     if (!this.#configuration.mockCustomers) {
       return next.handle(req);
     }
@@ -48,9 +51,10 @@ export class CustomersInterceptor implements HttpInterceptor {
     options: { params: HttpParams }
   ): Observable<HttpResponse<{ content: Customer[]; total: number }>> {
     if (!options.params.has('page')) {
-      return of({ content: this.#customers, total: this.#customers.length }).pipe(
-        this.#logRequest('GET', url)
-      );
+      return of({
+        content: this.#customers,
+        total: this.#customers.length,
+      }).pipe(this.#logRequest('GET', url));
     } else {
       return this.#pagedCustomers(Number(options.params.get('page'))).pipe(
         this.#logRequest('GET', url)
@@ -60,8 +64,9 @@ export class CustomersInterceptor implements HttpInterceptor {
 
   #post(url: string, customer: Customer): Observable<HttpResponse<unknown>> {
     const nextId = this.#getNextId();
-    this.#customers.push({ ...customer, id: nextId });
-    this.#customers.sort(sortCustomers);
+    this.#customers.unshift({ ...customer, id: nextId });
+    // this.#customers.push({ ...customer, id: nextId });
+    // this.#customers.sort(sortCustomers);
     return this.#toHttpResponse(
       this.#pagedCustomers(1).pipe(
         map((customers) => ({ customers, id: nextId })),
@@ -77,10 +82,12 @@ export class CustomersInterceptor implements HttpInterceptor {
           if (customer.name === 'asdf') {
             throw new HttpErrorResponse({
               status: 400,
-              error: 'no dummy names please'
+              error: 'no dummy names please',
             });
           } else {
-            this.#customers = this.#customers.map((c) => (c.id === customer.id ? customer : c));
+            this.#customers = this.#customers.map((c) =>
+              c.id === customer.id ? customer : c
+            );
             return customer;
           }
         })
@@ -103,12 +110,14 @@ export class CustomersInterceptor implements HttpInterceptor {
     return Math.max(...this.#customers.map((customer) => customer.id)) + 1;
   }
 
-  #pagedCustomers(page: number): Observable<{ content: Customer[]; total: number }> {
+  #pagedCustomers(
+    page: number
+  ): Observable<{ content: Customer[]; total: number }> {
     const start = page * this.#pageSize;
     const end = start + this.#pageSize;
     return of({
       content: this.#customers.slice(start, end),
-      total: this.#customers.length
+      total: this.#customers.length,
     });
   }
 
